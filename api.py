@@ -1,3 +1,2 @@
-apikey_openai =  ''
-
+apikey_cohere = ''
 apikey_news = ''

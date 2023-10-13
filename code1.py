@@ -2,21 +2,20 @@ import pyttsx3
 import datetime
 import speech_recognition as sr
 import webbrowser
-import openai
 import os
-import requests
 from datetime import datetime
-
+from cohere1 import ai_chat
+from newsapi import news_api
 
 # Properties and function
 
 name = 'Barbara'
-date_obj = (datetime.datetime.strptime('26 Sep 2023',"%d %b %Y"))
-born_on = date_obj.strftime("%Y-%m-%d")
+born_on = (datetime.strptime('26 Sep 2023',"%d %b %Y"))
 created_by = 'Shaunak Nagvenkar'
 creator_socials = []
 creator_info = [['hometown','Panaji, Goa, India'], ['studies', 'Bachelors of Technology in Computer Science Engineering', 'Vellore Institute of Technology, Vellore, Tamil Nadu, India']]
 current_date = datetime.now()
+
 if (current_date.month, current_date.day) < (born_on.month, born_on.day):
     age = current_date.year - born_on.year - 1
 else:
@@ -99,8 +98,8 @@ def lis():
 # greeting function
 
 def greeting():
-    hour = int(datetime.datetime.now().hour)
-    minute = int(datetime.datetime.now().minute)
+    hour = int(datetime.now().hour)
+    minute = int(datetime.now().minute)
     if(hour>=4 and hour <12):
         speak("Good Morning, Its Barbara here, I Hope you are having a good day")
     elif(hour == 12 and minute==0):
@@ -111,55 +110,35 @@ def greeting():
        speak("Good Evening, Its Barbara here, I Hope you are having a good day")
 
 
+#speak & save 
+def speak_save(res, query):
+    text = f'{query}\n{res}'
+    try:
+        speak(res)
+        if not os.path.exists("Cohere1"):
+            os.mkdir('Cohere1')
+        with open(f'Cohere1/{query[0:20]}.txt','w') as f:
+                f.write(text)
+    except Exception as e:
+            speak('Error occured')
+
+
 
 # API's
 
 
 # chat function api
 
-def ai_chat(prompt):
-    from api import apikey_openai
-    openai.api_key = apikey_openai
-    response = openai.Completion.create(
-    model="text-davinci-003",
-    prompt=prompt,
-    temperature=1,
-    max_tokens=256,
-    top_p=1,
-    frequency_penalty=0,
-    presence_penalty=0
-    )
-
-    res = response['choices'][0]['text']
-    text = f'{prompt}\n{res}'
-
-    try:
-        speak(res)
-        if not os.path.exists("Openai"):
-            os.mkdir('Openai')
-        with open(f'Openai/{prompt[0:20]}.txt','w') as f:
-            f.write(text)
-    except Exception as e:
-        speak('Error occured')
-
-
+def chat(query):
+    res = ai_chat(query)
+    speak_save(res, query)
+    
 
 # news function api
 
-def news(prompt):
-    from api import apikey_news
-    newsapi = apikey_news
-
-    url = (f'https://newsapi.org/v2/top-headlines?'
-        'q={prompt}&'
-        'from=2023-09-27&'
-        'sortBy=popularity&'
-        'apiKey={newsapi}')
-
-    response = requests.get(url)
-
-    print(response.json)
-
+def news(query):
+    res=news_api(query)
+    speak_save(res, query)
 
 
 # driver function
@@ -189,7 +168,7 @@ def process():
     elif('news' in query or 'latest news' in query):
         news(query)
     else:
-        ai_chat(prompt = query)
+        chat(query)
         process()
 
 
