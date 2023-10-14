@@ -1,11 +1,13 @@
-import pyttsx3
-import datetime
+from gtts import gTTS
 import speech_recognition as sr
-import webbrowser
-import os
 from datetime import datetime
+import os
 from cohere1 import ai_chat
-from newsapi import news_api
+from alarm import set_alarm, delete_alarm
+from open_website import open_website
+from open_application import open_application
+from newsapi import newsapi
+from sing import sing_song
 
 # Properties and function
 
@@ -25,29 +27,28 @@ def name_details(query):
     if('What' in query):
         speak('My name is barbara, I am a chatbot created by Shuanak Nagvenkar')
     elif('change' in query):
-        speak('What wouuld you prefer to call me?')
+        speak('What would you prefer to call me?')
         query = lis()
         global name
         name = query
         speak(f'Okay, {name} it is then...')
+    process()
 
 def build_details(query):
     if(('you' in query or 'your' in query) and not 'age' in query ):
         speak(f'I was built on {born_on} by {created_by}')
+    process()
 
 def creator_details():
     speak(f'I was built by {created_by}, he is based in {creator_info[0][1]} and is pursuing {creator_info[1][1]} degree from {creator_info[1][2]}')
-
-
+    process()
 
 # voice intitalise
 
-engine = pyttsx3.init('sapi5')
+engine = gTTS.init('sapi5')
 voices = engine.getProperty('voices')
 print(voices[0].id)
 engine.setProperty('voice',voices[1].id)
-
-
 
 # barbara functions
 
@@ -64,15 +65,11 @@ def barbara():
     except Exception as e:
         barbara()
 
-
-
 # speak function
 
 def speak(text):
     engine.say(text)
     engine.runAndWait()
-
-
 
 # listen function
 
@@ -92,8 +89,6 @@ def lis():
     except Exception as e:
         print('Say that again...')
         return ''
-    
-
 
 # greeting function
 
@@ -109,8 +104,8 @@ def greeting():
     else:
        speak("Good Evening, Its Barbara here, I Hope you are having a good day")
 
+#speak & save
 
-#speak & save 
 def speak_save(res, query):
     text = f'{query}\n{res}'
     try:
@@ -123,55 +118,39 @@ def speak_save(res, query):
             speak('Error occured')
 
 
-
-# API's
-
-
-# chat function api
-
-def chat(query):
-    res = ai_chat(query)
-    speak_save(res, query)
-    
-
-# news function api
-
-def news(query):
-    res=news_api(query)
-    speak_save(res, query)
-
-
 # driver function
 
 def process():
     query = lis()
     if('open a website' in query or 'search a website' in query or 'search on the web' in query):
-        speak("Which site do you want me to search for?")
-        query = lis()
-        if(query != ""):
-            query = query.lower()
-            speak("On it")
-            site = 'www.'+query+'.com'
-            webbrowser.open(site)
-        else:
-            lis()
-        process()
+        open_website(query)
+
+    elif('open a application' in query or 'open a software' in query or 'open a program' in query):
+        open_application(query)
+
     elif('your name' in query or 'you called' in query):
         name_details(query)
-        process()
+
     elif('birthday' in query or 'created' in query or 'built' in query):
         build_details()
-        process()
+
     elif('created you' in query or 'built you' in query or 'your parents' in query):
         creator_details()
-        process()
+
+    elif('alarm' in query):
+        if('delete' in query):
+            delete_alarm(query)
+        else:
+            set_alarm(query)
+
     elif('news' in query or 'latest news' in query):
-        news(query)
+        newsapi(query)
+
+    elif('play a song' in query):
+        sing_song(query)
+
     else:
-        chat(query)
-        process()
-
-
+        ai_chat(query)
 
 # main 
 
