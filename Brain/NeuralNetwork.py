@@ -14,17 +14,14 @@ def tokenize(text):
     sentence = []
     for sent in sen.sents:
         for token in sent:
-            sentence.append(stemming(token))
+            sentence.append(token)
     return(sentence)
 
-coll = tokenize(string)
-
 vectorizer = CountVectorizer()
-X = vectorizer.fit_transform([string])
-print(vectorizer.get_feature_names_out())
-print(vectorizer.vocabulary_)
-bag_of_words_array = X.toarray()
-bag_of_words_dict = dict(zip(vectorizer.get_feature_names_out(), bag_of_words_array[0]))
 
-print(X)
-print(bag_of_words_dict)
+def bag_of_words(string):
+    X = vectorizer.fit_transform([string])
+    print(vectorizer.get_feature_names_out())
+    print(vectorizer.vocabulary_)
+    bag_of_words_array = X.toarray()
+    print(bag_of_words_array)
