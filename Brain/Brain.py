@@ -1,14 +1,17 @@
-import tensorflow as tf
+import torch.nn as nn
 
-class NeuralNet(tf.keras.Model):
-    def __init__(self, inp_size, hid_size, num_classes):
+class NeuralNet(nn.Module):
+    def __init__(self, inp_size, hid_size, num_classes) -> None:
         super(NeuralNet, self).__init__()
-        self.l1 = tf.keras.layers.Dense(hid_size, activation='relu', input_shape=(inp_size,))
-        self.l2 =  tf.keras.layers.Dense(hid_size, activation='relu')
-        self.l3 = tf.keras.layers.Dense(num_classes)
+        self.l1 = nn.Linear(inp_size, hid_size)
+        self.l2 = nn.Linear(hid_size, hid_size)
+        self.l3 = nn.Linear(hid_size, num_classes)
+        self.relu = nn.ReLU()
 
-    def call(self, x):
+    def forward(self, x):
         out = self.l1(x)
+        out = self.relu(out)
         out = self.l2(out)
+        out = self.relu(out)
         out = self.l3(out)
-        return out
+        return(out)

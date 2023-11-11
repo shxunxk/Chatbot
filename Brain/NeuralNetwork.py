@@ -19,9 +19,9 @@ def tokenize(text):
 
 vectorizer = CountVectorizer()
 
-def bag_of_words(string):
-    X = vectorizer.fit_transform([string])
+def bag_of_words(sentences):
+    X = vectorizer.fit_transform(sentences)
     print(vectorizer.get_feature_names_out())
     print(vectorizer.vocabulary_)
     bag_of_words_array = X.toarray()
-    print(bag_of_words_array)
+    return (bag_of_words_array)
