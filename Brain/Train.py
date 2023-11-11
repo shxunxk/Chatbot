@@ -83,3 +83,18 @@ model = NeuralNet(input_size, hidden_size, output_size).to(device=device)
 criterion = nn.CrossEntropyLoss()  # Fix here: Use nn.CrossEntropyLoss() instead of nn.CrossEntropy()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+for epoch in range(epochs):
+    for (words, labels) in train_loader:
+        words = words.to(device)
+        labels = labels[0].to(device=device, dtype=torch.long)
+        output = model(words)
+        loss = criterion(output, labels)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    if(epoch+1) % 100 == 0:
+        print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
+
+print(f'Final Loss: {loss.item():.4f}')
