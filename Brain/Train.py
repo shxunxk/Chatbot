@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from NeuralNetwork import bag_of_words, tokenize, stemming
+from sklearn.preprocessing import LabelEncoder
 from Brain import NeuralNet
 
 with open('C:/Users/Shaunak/Documents/Barbara/Data/intents.json', 'r') as f:
@@ -65,8 +66,10 @@ class ChatDataset(Dataset):
     def __init__(self):
         self.n_samples = len(x_tr)
         self.x_data = x_tr
-        self.y_data = y_tr
-
+        label_encoder = LabelEncoder()
+        y_tr_encoded = label_encoder.fit_transform(y_tr)
+        self.y_data = torch.LongTensor(y_tr_encoded)
+        
     def __getitem__(self, index):
         return self.x_data[index], self.y_data[index]
     
@@ -80,21 +83,36 @@ train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = NeuralNet(input_size, hidden_size, output_size).to(device=device)
 
-criterion = nn.CrossEntropyLoss()  # Fix here: Use nn.CrossEntropyLoss() instead of nn.CrossEntropy()
+criterion = nn.CrossEntropyLoss()
 
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 for epoch in range(epochs):
     for (words, labels) in train_loader:
-        words = words.to(device)
-        labels = labels[0].to(device=device, dtype=torch.long)
+        words = words.to(device, dtype=torch.float32)
+        labels = labels.to(device, dtype=torch.long)
         output = model(words)
-        loss = criterion(output, labels)
+        loss = criterion(output, labels.squeeze())
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-    if(epoch+1) % 100 == 0:
-        print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
+    if (epoch + 1) % 100 == 0:
+        print(f'Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}')
+
 
 print(f'Final Loss: {loss.item():.4f}')
+
+data = {
+    "model_state": model.state_dict(),
+    "input_size": input_size,
+    "hidden_size": hidden_size,
+    'output_size': output_size,
+    "all_words": all_words,
+    "tags": tags
+}
+
+FILE = 'TrainData.pth'
+torch.save(data,FILE)
+
+print(f'Training completed, file saved')
