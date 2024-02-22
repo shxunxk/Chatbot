@@ -54,7 +54,7 @@
 import spacy
 import numpy
 import pandas
-from Listen import Listen
+from Functions.Listen import Listen
 from Process import Process
 
 # sentence = Listen()

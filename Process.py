@@ -1,6 +1,6 @@
 import spacy
-from TrainIntents import train
-from Speak import Speak
+from Train.TrainIntents import train
+from Functions.Speak import Speak
 import json
 
 with open('Data/intents.json') as f:
