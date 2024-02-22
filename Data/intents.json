@@ -15,6 +15,11 @@
             "tag":"health",
             "patterns": ["how are you", "are you fine", "What is up"],
             "responses":["I am fine sir", "I am doing great sir"]
+        },
+        {
+            "tag":"humor",
+            "patterns": ["There was a man called Gandhi", "are you fine", "What is up"],
+            "responses":["There was a man called Gandhi", "I am doing great sir"]
         }
     ]
 }

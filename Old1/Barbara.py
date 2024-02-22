@@ -28,7 +28,7 @@ model.eval()
 
 Name = 'Barbara'
 from Functions.Listen import Listen
-from Functions.Speak import Speak
+from Speak import Speak
 def Main():
     sentence = Listen()
     if sentence == 'bye':
