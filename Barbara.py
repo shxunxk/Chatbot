@@ -57,5 +57,5 @@ import pandas
 from Functions.Listen import Listen
 from Process import Process
 
-# sentence = Listen()
-Process('Tell me a joke')
+sentence = Listen()
+Process(sentence)

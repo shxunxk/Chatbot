@@ -14,8 +14,8 @@ from sklearn.metrics import accuracy_score, classification_report
 
 def train(sentence):
     data = {
-        "text": ["Hello", "How are you?", "Tell me a joke", "What's the weather like today?", "Set a timer for 10 minutes"],
-        "label": ["greeting", "health", "humor", "weather", "timer"]
+        "text": ["Hello", "How are you?", "Tell me a joke", "What's the weather like today?", "Set a timer for 10 minutes", "Fuck you"],
+        "label": ["greeting", "health", "humor", "weather", "timer", "curse"]
     }
 
     import pandas as pd
