@@ -1,8 +1,8 @@
 import spacy
-from Train.FindPatternResponse import train
+from Models.Load import load_and_predict
 from Functions.Speak import Speak
 import json
-from Train.FindPatternResponse import TrainPattern
+from Train.TrainPatterns import TrainPattern
 
 with open('Data/intents.json') as f:
     intents = json.load(f)
@@ -17,15 +17,19 @@ def Process(sentence):
     entity = {}
     dependency = {}
     res = nlp(doc)
-    for token in res:
+    for idx,token in enumerate(res):
         tokens.append(token)
         lemmatized[token.text] = token.lemma_
+        tokens[idx] = lemmatized[token.text]
         grammatics[token.text] = token.pos_
         dependency[token.text] = token.dep_
+
     for ent in res.ents:
         entity[ent.text] = ent.label_
 
-    intent = train(sentence)
+    print(lemmatized, grammatics)
+
+    intent = load_and_predict(sentence)
     for inten in intents["intents"]:
         if(inten["tag"] == intent):
             pattern = TrainPattern(sentence, inten['patterns'])
