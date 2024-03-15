@@ -12,3 +12,17 @@ def TrainPattern(sample, set):
     most_similar_text = set[most_similar_index]
 
     return (most_similar_text)
+
+# a = TrainPattern("fuck", [
+#                "Hi",
+#                "How are you?",
+#                "Is anyone there?",
+#                "Hello",
+#                "Good day",
+#                "What's up",
+#                "how are ya",
+#                "heyy",
+#                "whatsup",
+#                "??? ??? ??"
+#             ])
+# print(a)

@@ -1,4 +1,5 @@
 import speech_recognition as sr
+# from Speak import Speak
 
 def Listen():
     r = sr.Recognizer()
@@ -14,4 +15,8 @@ def Listen():
         return query
     except Exception as e:
         print('Say that again...\n')
-        return ('Say that again...').lower()
+        # Speak('Say that again...')
+        Listen()
+
+# a = Listen()
+# print(a)

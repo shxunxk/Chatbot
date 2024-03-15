@@ -10,10 +10,10 @@ import os
 # from Functions.Listen import Listen
 # from Process import Process
 
-def train(sentence):
+def train():
     data = {
         "text": ["Hello", "How are you?", "Tell me a joke", "What's the weather like today?", "Set a timer for 10 minutes", "Fuck you"],
-        "label": ["greeting", "health", "humor", "weather", "timer", "curse"]
+        "label": ["greeting", "health", "humor", "weather", "timer", "swear"]
     }
 
     import pandas as pd
@@ -21,20 +21,13 @@ def train(sentence):
 
     model = make_pipeline(CountVectorizer(), MultinomialNB())
 
-    model.fit(data["text"], data["label"])
-
+    model.fit(df["text"], df["label"])
+ 
     current_directory = os.getcwd()
     os.makedirs(f"{current_directory}/Models", exist_ok=True)
     print(f"{current_directory}/Models/Patternmodel.joblib")
 
     joblib.dump(model, f"{current_directory}/Models/Patternmodel.joblib")
 
-    # accuracy = model.score(pd.Series(sentence), predictions)
-    # print(f"Model Accuracy: {accuracy}")
 
-    # if accuracy >= 0.8:
-    #     return(predictions[0])
-    # else:
-    #     Speak("Had problems recognizing that....")
-    #     # sentence1 = Listen()
-    #     Process("hi")
+train()

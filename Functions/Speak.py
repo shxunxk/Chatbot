@@ -8,3 +8,5 @@ def Speak(text):
     print(f'\nA.I : {text}\n')
     engine.say(text)
     engine.runAndWait()
+
+# Speak('Hi')

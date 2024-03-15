@@ -6,11 +6,6 @@
             "responses":["I am fine sir", "I am doing great sir"]
         },
         {
-            "tag":"curse",
-            "patterns": ["Fuck you"],
-            "responses":["Buzz off"]
-        },
-        {
             "tag":"humor",
             "patterns": [
                 "There was a man called Gandhi",
@@ -654,7 +649,7 @@
             "context_set": ""
          },
           {
-            "tag": "swear",
+            "tag": "curse",
             "patterns": [
                "fuck",
                "bitch",
