@@ -22,25 +22,29 @@ def similar_tag(intent, intents_data = intents):
 
 def Process(sentence):
     doc = nlp(sentence)
-    tokens= []
-    lemmatized = {}
-    grammatics = {}
-    entity = {}
-    dependency = {}
-    res = nlp(doc)
-    for idx,token in enumerate(res):
-        tokens.append(token)
-        lemmatized[token.text] = token.lemma_
-        tokens[idx] = lemmatized[token.text]
-        grammatics[token.text] = token.pos_
-        dependency[token.text] = token.dep_
+    tokens = [token.text for token in doc]
+    tokens = [token.lower() for token in tokens]
+    sentence = ' '.join(tokens)
+    print(tokens)
+    # lemmatized = {}
+    # grammatics = {}
+    # entity = {}
+    # dependency = {}
+    # res = nlp(doc)
+    # for idx,token in enumerate(res):
+    #     tokens.append(token)
+    #     lemmatized[token.text] = token.lemma_
+    #     tokens[idx] = lemmatized[token.text]
+    #     grammatics[token.text] = token.pos_
+    #     dependency[token.text] = token.dep_
 
-    for ent in res.ents:
-        entity[ent.text] = ent.label_
+    # for ent in res.ents:
+    #     entity[ent.text] = ent.label_
 
-    print(lemmatized, grammatics)
+    # print(lemmatized, grammatics)
 
     intent = load_and_predict(sentence)
+    print(intent)
     idx = similar_tag(intent)
     pattern = TrainPattern(sentence, intents['intents'][idx]['patterns'])
     response = TrainPattern(pattern, intents['intents'][idx]['responses'])

@@ -1,33 +1,37 @@
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-import joblib
 import os
-
-# from ..Functions.Speak import Speak
-# from Functions.Listen import Listen
-# from Process import Process
+import pandas as pd
+import numpy as np
+import joblib
+from gensim.models import Word2Vec
+from sklearn.svm import SVC
 
 def train():
     data = {
-        "text": ["Hello", "How are you?", "Tell me a joke", "What's the weather like today?", "Set a timer for 10 minutes", "Fuck you"],
+        "text": ["hello", "How are you?", "Tell me a joke", "What's the weather like today?", "Set a timer for 10 minutes", "Fuck you"],
         "label": ["greeting", "health", "humor", "weather", "timer", "swear"]
     }
 
-    import pandas as pd
     df = pd.DataFrame(data)
 
-    model = make_pipeline(CountVectorizer(), MultinomialNB())
+    sentences = [text.split() for text in df["text"]]
 
-    model.fit(df["text"], df["label"])
- 
+    for i in range(len(sentences)):
+        for j in range(len(sentences[i])):
+            sentences[i][j] = sentences[i][j].lower()
+    print(sentences)
+
+    model = Word2Vec(sentences, vector_size=100, window=5, min_count=1, workers=4)
+
+    X = np.array([np.mean([model.wv[word] for word in text.split() if word in model.wv] or [np.zeros(100)], axis=0) for text in df["text"]])
+    print(X)
+    clf = SVC()
+    clf.fit(X, df["label"])
+
     current_directory = os.getcwd()
     os.makedirs(f"{current_directory}/Models", exist_ok=True)
-    print(f"{current_directory}/Models/Patternmodel.joblib")
+    model_path = f"{current_directory}/Models/Patternmodel.joblib"
+    joblib.dump((model, clf), model_path)
 
-    joblib.dump(model, f"{current_directory}/Models/Patternmodel.joblib")
-
+    print(f"Models saved at {model_path}")
 
 train()
