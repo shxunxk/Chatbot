@@ -44,7 +44,6 @@ def Process(sentence):
     # print(lemmatized, grammatics)
 
     intent = load_and_predict(sentence)
-    print(intent)
     idx = similar_tag(intent)
     pattern = TrainPattern(sentence, intents['intents'][idx]['patterns'])
     response = TrainPattern(pattern, intents['intents'][idx]['responses'])
