@@ -1,29 +1,45 @@
 import os
-import pandas as pd
 import numpy as np
-import joblib
+from keras.models import load_model
+from gensim.models import Word2Vec
+from keras.preprocessing.sequence import pad_sequences
+# from Functions.Listen import Listen
+# import Process
+# from Functions.Speak import Speak
 
 def load_and_predict(sentence):
-    print(sentence)
-    model_path = f"{os.getcwd()}/Models/Patternmodel.joblib"
-    loaded_object = joblib.load(model_path)
 
-    if isinstance(loaded_object, tuple) and len(loaded_object) == 2:
-        model, clf = loaded_object
+    sentence = sentence.lower().split()
 
-        tokens = sentence.split()
-        sentence_vec = np.mean([model.wv[word] for word in tokens if word in model.wv] or [np.zeros(100)], axis=0)
-        print(sentence_vec)
-        if np.all(sentence_vec == 0):
-            return "unknown"
+    # Load the Word2Vec model
+    model_path = os.path.join(os.getcwd(), "Models", "Patternmodel.w2v")
+    model = Word2Vec.load(model_path)
 
-        prediction = clf.predict([sentence_vec])
+    X = [model.wv[word] for word in sentence if word in model.wv]
 
-        return prediction[0]
+    # Pad sequences if necessary
+    if X:
+        max_len = len(X)
 
+        X = np.array(X).reshape(1, -1)
+
+        X = pad_sequences([X], maxlen=max_len, padding='post', dtype='float32')
+
+        # Load the trained model
+        model_path = os.path.join(os.getcwd(), "Models", "Patternmodel.h5")
+        loaded_model = load_model(model_path)
+
+        # Predict
+        if loaded_model:
+            prediction = loaded_model.predict(X)
+            predicted_label_index = np.argmax(prediction)
+            return predicted_label_index
+        else:
+            print("Error: Failed to load the model.")
+            return None
     else:
-        print("Error: Unexpected format of loaded model file.")
+        print("Error: None of the words in the sentence are in the Word2Vec model's vocabulary.")
         return None
-
-# a = load_and_predict('Hello')
-# print(a)
+        
+a = load_and_predict('Hello')
+print(a)

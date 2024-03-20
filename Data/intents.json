@@ -8,8 +8,7 @@
         {
             "tag":"humor",
             "patterns": [
-                "There was a man called Gandhi",
-                "are you fine", "What is up"
+                "tell a joke", "What is up"
             ],
             "responses":[
                 "There was a man called Gandhi",
@@ -62,8 +61,21 @@
             "context_set": ""
          },
           {
-            "tag": "creator",
+            "tag": "self",
             "patterns": [
+               "name",
+               "your name",
+               "do you have a name",
+               "what are you called",
+               "what is your name",
+               "what should I call you",
+               "whats your name?",
+               "what are you",
+               "who are you",
+               "who is this",
+               "what am i chatting to",
+               "who am i taking to",
+               "what are you",
                "what is the name of your developers",
                "what is the name of your creators",
                "what is the name of the developers",
@@ -82,32 +94,10 @@
                "who designed you"
             ],
             "responses": [
-               "College students"
-            ],
-            "context_set": ""
-         },
-          {
-            "tag": "name",
-            "patterns": [
-               "name",
-               "your name",
-               "do you have a name",
-               "what are you called",
-               "what is your name",
-               "what should I call you",
-               "whats your name?",
-               "what are you",
-               "who are you",
-               "who is this",
-               "what am i chatting to",
-               "who am i taking to",
-               "what are you"
-            ],
-            "responses": [
-               "You can call me Mind Reader.",
-               "I'm Mind Reader",
+               "You can call me Barbara.",
+               "I'm Barbara",
                "I am a Chatbot.",
-               "I am your helper"
+               "I was created by Shaunak Nagvenkar"
             ],
             "context_set": ""
          },
