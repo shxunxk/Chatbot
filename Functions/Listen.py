@@ -1,22 +1,15 @@
-import speech_recognition as sr
-# from Speak import Speak
+from google.cloud import speech
+from google.cloud import texttospeech
 
-def Listen():
-    r = sr.Recognizer()
-    with sr.Microphone() as src:
-        print('Listening...')
-        r.pause_threshold = 1
-        audio = r.listen(src,0,3)
-    try:
-        print('Recognizing...')
-        query = r.recognize_google(audio, language='en-in')
-        query = str(query).lower()
-        print(f"{query}\n")
-        return query
-    except Exception as e:
-        print('Say that again...\n')
-        # Speak('Say that again...')
-        Listen()
-
-# a = Listen()
-# print(a)
+def Listen(audio_file):
+    client = speech.SpeechClient()
+    
+    # Read the audio file content
+    with open(audio_file, 'rb') as f:
+        audio = speech.RecognitionAudio(content=f.read())
+    
+    # Transcribe the speech
+    response = client.recognize(config=speech.RecognitionConfig(language_code="en-US"), audio=audio)
+    
+    # Return the transcribed text
+    return response.results[0].alternatives[0].transcript
